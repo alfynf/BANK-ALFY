@@ -32,7 +32,7 @@ func InitDB() {
 }
 
 func InitMigrate() {
-	DB.AutoMigrate(&models.Customers{})
+	DB.AutoMigrate(&models.Nasabah{})
 }
 
 // // ===============================================================//

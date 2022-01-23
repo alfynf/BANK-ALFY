@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"it-bni/models"
 	"log"
 	"os"
@@ -35,33 +36,34 @@ func InitMigrate() {
 	DB.AutoMigrate(&models.Nasabah{})
 }
 
-// // ===============================================================//
+// ===============================================================//
 
-// func InitDBTest() {
-// 	config := map[string]string{
-// 		"DB_Username": "root",
-// 		"DB_Password": "12345678",
-// 		"DB_Port":     "3306",
-// 		"DB_Host":     "localhost",
-// 		"DB_Name":     "db_test",
-// 	}
+func InitDBTest() {
+	config := map[string]string{
+		"DB_Username": "root",
+		"DB_Password": "12345678",
+		"DB_Port":     "3306",
+		"DB_Host":     "localhost",
+		"DB_Name":     "bank_test",
+	}
 
-// 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-// 		config["DB_Username"],
-// 		config["DB_Password"],
-// 		config["DB_Host"],
-// 		config["DB_Port"],
-// 		config["DB_Name"],
-// 	)
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		config["DB_Username"],
+		config["DB_Password"],
+		config["DB_Host"],
+		config["DB_Port"],
+		config["DB_Name"],
+	)
 
-// 	var e error
-// 	DB, e = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
-// 	if e != nil {
-// 		panic(e)
-// 	}
-// 	InitMigrationTest()
-// }
+	var e error
+	DB, e = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+	if e != nil {
+		panic(e)
+	}
+	InitMigrationTest()
+}
 
-// func InitMigrationTest() {
-
-// }
+func InitMigrationTest() {
+	DB.Migrator().DropTable(&models.Nasabah{})
+	DB.AutoMigrate(&models.Nasabah{})
+}

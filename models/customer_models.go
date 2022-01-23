@@ -18,6 +18,11 @@ type Body struct {
 	NoKTP string `json:"no_ktp" form:"no_ktp"`
 }
 
+type BodyUpdate struct {
+	NoKTP      string  `json:"no_ktp" form:"no_ktp"`
+	UpdateData Nasabah `json:"update_data" form:"update_data"`
+}
+
 type GetResponse struct {
 	NoKTP        string `json:"no_ktp" form:"no_ktp"`
 	Nama         string `json:"nama" form:"nama"`

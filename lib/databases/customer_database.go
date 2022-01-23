@@ -47,6 +47,9 @@ func UpdateNasabah(ktp string, updateNasabah *models.Nasabah) (interface{}, erro
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
+	if tx.RowsAffected < 1 {
+		return nil, nil
+	}
 	var updatedNasabah models.GetResponse
 	config.DB.Model(nasabah).Where("no_ktp = ?", ktp).First(&updatedNasabah)
 	return updatedNasabah, nil

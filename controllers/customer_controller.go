@@ -15,7 +15,7 @@ func CreateNasabahController(c echo.Context) error {
 	var body models.Nasabah
 	c.Bind(&body)
 	body.Nama = strings.TrimSpace(body.Nama)
-	if body.Nama == "" || body.NoKTP == "" || body.Telp == "" || body.TempatLahir == "" || body.TanggalLahir == "" {
+	if body.Nama == "" || body.NoKTP == "" || body.Telp == "" || body.TempatLahir == "" || body.TanggalLahir == "" || body.Alamat == "" {
 		return c.JSON(http.StatusBadRequest, responses.FailedReponse("Seluruh data harus diisi"))
 	}
 	if len(body.NoKTP) != 16 {
@@ -34,6 +34,7 @@ func CreateNasabahController(c echo.Context) error {
 	}
 	body.Nama = strings.ToUpper(body.Nama)
 	body.TempatLahir = strings.ToUpper(body.TempatLahir)
+	body.Alamat = strings.ToUpper(body.Alamat)
 	_, err := databases.CreateNasabah(&body)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.FailedReponse("Gagal membuat nasabah baru"))
@@ -69,15 +70,14 @@ func GetNasabahController(c echo.Context) error {
 
 // fungsi untuk melakukan pengkinian data nasabah
 func UpdateNasabahController(c echo.Context) error {
-	type BodyUpdate struct {
-		NoKTP      string         `json:"no_ktp" form:"no_ktp"`
-		UpdateData models.Nasabah `json:"update_data" form:"update_data"`
-	}
-	var body BodyUpdate
+	var body models.BodyUpdate
 	c.Bind(&body)
 	nasabah, err := databases.UpdateNasabah(body.NoKTP, &body.UpdateData)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.FailedReponse("Gagal melakukan pengikinian informasi nasabah"))
+	}
+	if nasabah == nil {
+		return c.JSON(http.StatusBadRequest, responses.FailedReponse("Nasabah tidak ditemukan"))
 	}
 	return c.JSON(http.StatusOK, responses.SuccessResponseWithData(nasabah))
 }
@@ -86,9 +86,12 @@ func UpdateNasabahController(c echo.Context) error {
 func DeleteNasabahController(c echo.Context) error {
 	var body models.Body
 	c.Bind(&body)
-	_, err := databases.DeleteNasabah(body.NoKTP)
+	nasabah, err := databases.DeleteNasabah(body.NoKTP)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, responses.FailedReponse("Gagal menghapus nasabah"))
+	}
+	if nasabah == nil {
+		return c.JSON(http.StatusBadRequest, responses.FailedReponse("Nasabah tidak ditemukan"))
 	}
 	return c.JSON(http.StatusOK, responses.SuccessResponse())
 }

@@ -14,6 +14,7 @@ type Nasabah struct {
 	TanggalLahir string `gorm:"type:datetime;not null" json:"tanggal_lahir" form:"tanggal_lahir"`
 }
 
+// Body json untuk fitur yang meminta param no ktp
 type Body struct {
 	NoKTP string `json:"no_ktp" form:"no_ktp"`
 }

@@ -29,7 +29,11 @@ func GetNasabahByKTP(ktp string) (interface{}, error) {
 
 // fungsi untuk melihat daftar semua nasabah yang sudah pernah terdaftar
 func GetNasabah() (interface{}, error) {
-	var result []models.GetResponse
+	type DaftarNasabah struct {
+		NoKTP string `json:"no_ktp" form:"no_ktp"`
+		Nama  string `json:"nama" form:"nama"`
+	}
+	var result []DaftarNasabah
 	tx := config.DB.Model(&models.Nasabah{}).Where("deleted_at IS NULL").Find(&result)
 	if tx.Error != nil {
 		return nil, tx.Error
